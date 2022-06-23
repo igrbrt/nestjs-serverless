@@ -1,0 +1,53 @@
+service: readapp-server
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-dynamodb-local
+  #- serverless-plugin-typescript
+
+functions:
+  index:
+    handler: dist/src/index.handler
+    events:
+      - http:
+          method: any
+          path: /{any+}
+
+provider:
+  name: aws
+  region: sa-east-1
+  runtime: nodejs16.x
+  apiGateway:
+    shouldStartNameWithService: true
+
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: !GetAtt ArticlesTable.Arn #arn:aws:dynamodb:localhost:8000:table/ArticlesTable
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: false
+      migrate: true
+    stages: dev
+    endpoints:
+      dynamodbURL: 'http://localhost:8000'
+#serverless-offline:
+#useChildProcesses: true
+
+resources:
+  - ${file(resource/dynamodb.yml)}

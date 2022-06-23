@@ -1,0 +1,31 @@
+Resources:
+  ArticleTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    Properties:
+      TableName: ArticlesTable
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+# Resources:
+#     TodosTable:
+#       Type: AWS::DynamoDB::Table
+#       Properties:
+#         TableName: ArticlesTable
+#         AttributeDefinitions:
+#           - AttributeName: id
+#             AttributeType: S
+
+#         KeySchema:
+#           - AttributeName: id
+#             KeyType: HASH
+
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
